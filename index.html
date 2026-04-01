@@ -6,9 +6,12 @@
   <title>Metronome</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark">
   <div class="app">
-    <h1>Metronome</h1>
+    <div class="top-bar">
+      <h1>Metronome</h1>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">☀️</button>
+    </div>
 
     <!-- Beat indicators -->
     <div class="beat-row" id="beat-row">
@@ -28,26 +31,23 @@
 
     <input type="range" id="bpm-slider" min="30" max="240" value="120" aria-label="BPM">
 
-    <!-- Tempo presets -->
-    <div class="option-group">
-      <label>Tempo</label>
-      <div class="options">
-        <button class="opt tempo" data-bpm="60">Largo</button>
-        <button class="opt tempo" data-bpm="90">Andante</button>
-        <button class="opt tempo selected" data-bpm="120">Allegro</button>
-        <button class="opt tempo" data-bpm="160">Vivace</button>
-        <button class="opt tempo" data-bpm="200">Presto</button>
-      </div>
-    </div>
-
     <!-- Time signature -->
     <div class="option-group">
       <label>Time Signature</label>
       <div class="options">
-        <button class="opt ts" data-ts="2" aria-label="2/4 time">2/4</button>
-        <button class="opt ts" data-ts="3" aria-label="3/4 time">3/4</button>
-        <button class="opt ts selected" data-ts="4" aria-label="4/4 time">4/4</button>
-        <button class="opt ts" data-ts="6" aria-label="6/8 time">6/8</button>
+        <button class="opt ts" data-ts="2">2/4</button>
+        <button class="opt ts" data-ts="3">3/4</button>
+        <button class="opt ts selected" data-ts="4">4/4</button>
+        <button class="opt ts" data-ts="6">6/8</button>
+      </div>
+    </div>
+
+    <!-- Accent mode -->
+    <div class="option-group">
+      <label>First Beat</label>
+      <div class="options">
+        <button class="opt accent-opt selected" data-accent="on">Accented</button>
+        <button class="opt accent-opt" data-accent="off">Equal</button>
       </div>
     </div>
 

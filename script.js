@@ -1,7 +1,7 @@
 (() => {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-  // --- Sound generators (accent = louder + higher pitch) ---
+  // --- Sound generators ---
   function makeSound(type, ctx, accent) {
     const vol = accent ? 1 : 0.5;
     const pitchMul = accent ? 1.3 : 1;
@@ -74,6 +74,8 @@
   let currentLight = '#ff4444';
   let timeSignature = 4;
   let beatIndex = 0;
+  let accentOn = true;
+  let sliding = false;
 
   // --- DOM ---
   const light = document.getElementById('light');
@@ -81,31 +83,38 @@
   const slider = document.getElementById('bpm-slider');
   const startBtn = document.getElementById('start-btn');
   const beatRow = document.getElementById('beat-row');
+  const themeToggle = document.getElementById('theme-toggle');
 
-  function updateBpm(val) {
-    bpm = Math.max(30, Math.min(240, val));
-    slider.value = bpm;
+  // --- BPM (mute while sliding) ---
+  slider.addEventListener('input', () => {
+    bpm = +slider.value;
     bpmValue.textContent = bpm;
-    // highlight matching tempo preset
-    document.querySelectorAll('.tempo').forEach(b => {
-      b.classList.toggle('selected', +b.dataset.bpm === bpm);
-    });
-    if (running) restart();
-  }
-
-  // BPM slider
-  slider.addEventListener('input', () => updateBpm(+slider.value));
-
-  // BPM +/- buttons
-  document.getElementById('bpm-minus').addEventListener('click', () => updateBpm(bpm - 1));
-  document.getElementById('bpm-plus').addEventListener('click', () => updateBpm(bpm + 1));
-
-  // Tempo presets
-  document.querySelectorAll('.tempo').forEach(btn => {
-    btn.addEventListener('click', () => updateBpm(+btn.dataset.bpm));
+    if (!sliding) {
+      sliding = true;
+      if (running) stop();
+    }
   });
 
-  // Time signature
+  slider.addEventListener('change', () => {
+    sliding = false;
+    if (running) start();
+  });
+
+  document.getElementById('bpm-minus').addEventListener('click', () => {
+    bpm = Math.max(30, bpm - 1);
+    slider.value = bpm;
+    bpmValue.textContent = bpm;
+    if (running) restart();
+  });
+
+  document.getElementById('bpm-plus').addEventListener('click', () => {
+    bpm = Math.min(240, bpm + 1);
+    slider.value = bpm;
+    bpmValue.textContent = bpm;
+    if (running) restart();
+  });
+
+  // --- Time signature ---
   function buildBeatDots() {
     beatRow.innerHTML = '';
     for (let i = 0; i < timeSignature; i++) {
@@ -127,7 +136,16 @@
     });
   });
 
-  // Light options
+  // --- Accent toggle ---
+  document.querySelectorAll('.accent-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.accent-opt').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      accentOn = btn.dataset.accent === 'on';
+    });
+  });
+
+  // --- Light options ---
   document.querySelectorAll('[data-light]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-light]').forEach(b => b.classList.remove('selected'));
@@ -138,7 +156,7 @@
     });
   });
 
-  // Sound options
+  // --- Sound options ---
   document.querySelectorAll('[data-sound]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('[data-sound]').forEach(b => b.classList.remove('selected'));
@@ -147,7 +165,16 @@
     });
   });
 
-  // Start / Stop
+  // --- Theme toggle ---
+  themeToggle.addEventListener('click', () => {
+    const body = document.body;
+    const isDark = body.classList.contains('dark');
+    body.classList.remove(isDark ? 'dark' : 'light');
+    body.classList.add(isDark ? 'light' : 'dark');
+    themeToggle.textContent = isDark ? '🌙' : '☀️';
+  });
+
+  // --- Start / Stop ---
   startBtn.addEventListener('click', () => {
     if (audioCtx.state === 'suspended') audioCtx.resume();
     running = !running;
@@ -157,17 +184,13 @@
   });
 
   function tick() {
-    const isAccent = beatIndex === 0;
+    const isAccent = accentOn && beatIndex === 0;
     makeSound(currentSound, audioCtx, isAccent);
 
-    // Light flash
     light.classList.add('flash');
     if (isAccent) light.classList.add('accent-flash');
-    setTimeout(() => {
-      light.classList.remove('flash', 'accent-flash');
-    }, 90);
+    setTimeout(() => light.classList.remove('flash', 'accent-flash'), 90);
 
-    // Beat dots
     beatRow.querySelectorAll('.beat-dot').forEach(d => d.classList.remove('active'));
     const activeDot = beatRow.querySelector(`[data-beat="${beatIndex}"]`);
     if (activeDot) activeDot.classList.add('active');
@@ -194,6 +217,5 @@
     if (running) start();
   }
 
-  // Init
   buildBeatDots();
 })();
