@@ -4,16 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Metronome</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
-<body class="dark">
+<body>
   <div class="app">
-    <div class="top-bar">
-      <h1>Metronome</h1>
-      <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">☀️</button>
-    </div>
+    <h1>Metronome</h1>
 
-    <!-- Beat indicators -->
     <div class="beat-row" id="beat-row">
       <div class="beat-dot accent" data-beat="0"></div>
       <div class="beat-dot" data-beat="1"></div>
@@ -31,7 +27,6 @@
 
     <input type="range" id="bpm-slider" min="30" max="240" value="120" aria-label="BPM">
 
-    <!-- Time signature -->
     <div class="option-group">
       <label>Time Signature</label>
       <div class="options">
@@ -42,7 +37,6 @@
       </div>
     </div>
 
-    <!-- Accent mode -->
     <div class="option-group">
       <label>First Beat</label>
       <div class="options">
@@ -75,6 +69,6 @@
     <button id="start-btn" class="start-btn" aria-label="Start or stop metronome">Start</button>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>

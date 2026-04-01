@@ -14,20 +14,23 @@ A simple, mobile-friendly metronome built with plain HTML, CSS, and JavaScript �
 - Accented first beat toggle — louder, higher pitch, bigger flash (like a real metronome) or equal beats
 - Beat indicator dots synced to the time signature
 - 4 light colors: red, cyan, gold, lime
-- 4 synthesized sounds: click, snap, beep, knock
-- Dark / light mode toggle
-- Smartphone-optimized responsive UI
+- 5 synthesized sounds: beep, tick, click, snap, knock
+- Smartphone-optimized UI
 
+## How it was built
+
+This project was built entirely with AI assistance using [Kiro](https://kiro.dev), an AI-powered IDE. The entire app — from concept to deployment — was generated through a conversational workflow with the AI agent.
 
 ### Tech decisions
 
 - **Plain HTML/CSS/JS** — chosen deliberately over frameworks like React or Vue for maximum simplicity. No bundler, no transpiler, no `node_modules`. Just three files that run directly in the browser.
-- **Web Audio API** — all four sounds are synthesized in real-time using oscillators and noise buffers. No audio files to load or host. Each sound has an accented variant (louder, higher pitch) for the downbeat, togglable by the user.
+- **Web Audio API** — all five sounds are synthesized in real-time using oscillators and noise buffers. No audio files to load or host. Each sound has an accented variant (louder, higher pitch) for the downbeat, togglable by the user.
+  - `beep`: 880Hz sine wave (1144Hz on accent) with exponential gain ramp
+  - `tick`: square wave burst with sine body resonance — mimics a mechanical metronome
   - `click`: short white noise burst with fast decay
   - `snap`: layered bandpass noise + sine pop — sharp and punchy
-  - `beep`: 880Hz sine wave (1144Hz on accent) with exponential gain ramp
   - `knock`: deep low-frequency thump (220→60Hz sweep) with noise transient — loud and full
-- **CSS custom properties** — light colors are driven by `--c` and `--light-color` variables. Dark/light themes are handled via body class toggling with scoped CSS rules.
+- **CSS custom properties** — light colors are driven by `--c` and `--light-color` variables for easy color switching.
 - **Beat tracking** — a `beatIndex` counter cycles through the time signature. Beat 0 triggers the accent when enabled (louder sound, bigger visual pulse, scale 1.12× vs 1.05×).
 - **Silent slider** — the metronome mutes while the user drags the BPM slider and resumes on release, avoiding chaotic sound bursts during adjustment.
 - **Mobile-first design** — `max-width: 420px`, `100dvh` viewport, touch-friendly pill-shaped controls, circular light swatches.
@@ -36,7 +39,7 @@ A simple, mobile-friendly metronome built with plain HTML, CSS, and JavaScript �
 
 ```
 index.html   → app shell and UI markup
-style.css    → dark/light themes, responsive layout, flash animations
+style.css    → responsive layout, flash animations
 script.js    → audio engine, beat tracking, state management, DOM interaction
 ```
 
