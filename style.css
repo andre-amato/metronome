@@ -4,9 +4,14 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   min-height: 100dvh;
   -webkit-tap-highlight-color: transparent;
   transition: background .3s, color .3s;
+}
+
+@media (min-width: 500px) {
+  body { align-items: center; }
 }
 
 /* Dark mode (default) */
@@ -28,15 +33,18 @@ body.light {
   color: #222;
 }
 body.light .opt { background: #fff; border-color: #ddd; color: #999; }
-body.light .opt.selected { border-color: #333; color: #222; background: #f8f8ff; }
+body.light .opt.selected { border-color: #333; color: #222; background: #e8e8f0; }
+body.light .opt[data-light] { background: var(--c); opacity: .4; border-color: transparent; }
+body.light .opt[data-light].selected { opacity: 1; border-color: #333; box-shadow: 0 0 10px var(--c); }
 body.light .bpm-nudge { background: #fff; border-color: #ccc; color: #222; }
-body.light .light { background: radial-gradient(circle, #e8e8f0 0%, #dddde5 100%); border-color: #ccc; }
-body.light .beat-dot { background: #ddd; border-color: #ccc; }
+body.light .light { background: radial-gradient(circle, #dddde5 0%, #ccccd5 100%); border-color: #bbb; }
+body.light .beat-dot { background: #ccc; border-color: #bbb; }
 body.light .start-btn { background: linear-gradient(135deg, #222, #444); color: #fff; }
 body.light .start-btn.active { background: linear-gradient(135deg, #ff4444, #cc2222); color: #fff; }
 body.light .theme-btn { background: #fff; border-color: #ccc; color: #222; }
-body.light h1 { opacity: .4; }
-body.light .option-group label { opacity: .4; }
+body.light h1 { opacity: .5; }
+body.light .option-group label { opacity: .5; }
+body.light input[type="range"] { accent-color: #555; }
 
 .app {
   width: 100%;
@@ -164,6 +172,8 @@ input[type="range"] {
 .options {
   display: flex;
   gap: .4rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 /* Option buttons — rounded */
