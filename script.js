@@ -7,6 +7,41 @@
     const pitchMul = accent ? 1.3 : 1;
 
     switch (type) {
+      case 'pulse': {
+        // Loud layered hit: square burst + sine thump + noise crack
+        const osc1 = ctx.createOscillator();
+        const g1 = ctx.createGain();
+        osc1.type = 'square';
+        osc1.frequency.value = 1000 * pitchMul;
+        g1.gain.setValueAtTime(vol * 1.5, ctx.currentTime);
+        g1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.04);
+        osc1.connect(g1).connect(ctx.destination);
+        osc1.start();
+        osc1.stop(ctx.currentTime + 0.04);
+        // Low sine thump
+        const osc2 = ctx.createOscillator();
+        const g2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(300 * pitchMul, ctx.currentTime);
+        osc2.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.05);
+        g2.gain.setValueAtTime(vol * 1.2, ctx.currentTime);
+        g2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.06);
+        osc2.connect(g2).connect(ctx.destination);
+        osc2.start();
+        osc2.stop(ctx.currentTime + 0.06);
+        // Noise crack
+        const buf = ctx.createBuffer(1, ctx.sampleRate * 0.01, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+        const g3 = ctx.createGain();
+        g3.gain.setValueAtTime(vol * 1.6, ctx.currentTime);
+        g3.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.012);
+        src.connect(g3).connect(ctx.destination);
+        src.start();
+        break;
+      }
       case 'click': {
         const buf = ctx.createBuffer(1, ctx.sampleRate * 0.025, ctx.sampleRate);
         const d = buf.getChannelData(0);
@@ -93,7 +128,7 @@
   let bpm = 120;
   let running = false;
   let timerId = null;
-  let currentSound = 'click';
+  let currentSound = 'pulse';
   let currentLight = '#ff4444';
   let timeSignature = 4;
   let beatIndex = 0;
