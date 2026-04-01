@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metronome</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>Metronome</h1>
+
+    <div id="light" class="light"></div>
+
+    <div class="bpm-display">
+      <span id="bpm-value">120</span> BPM
+    </div>
+
+    <input type="range" id="bpm-slider" min="30" max="240" value="120" aria-label="BPM">
+
+    <div class="option-group">
+      <label>Light</label>
+      <div class="options">
+        <button class="opt selected" data-light="red" style="--c:#ff4444" aria-label="Red light"></button>
+        <button class="opt" data-light="cyan" style="--c:#00e5ff" aria-label="Cyan light"></button>
+        <button class="opt" data-light="gold" style="--c:#ffd600" aria-label="Gold light"></button>
+        <button class="opt" data-light="lime" style="--c:#76ff03" aria-label="Lime light"></button>
+      </div>
+    </div>
+
+    <div class="option-group">
+      <label>Sound</label>
+      <div class="options">
+        <button class="opt selected" data-sound="click" aria-label="Click sound">Click</button>
+        <button class="opt" data-sound="beep" aria-label="Beep sound">Beep</button>
+        <button class="opt" data-sound="wood" aria-label="Wood sound">Wood</button>
+        <button class="opt" data-sound="hi-hat" aria-label="Hi-hat sound">Hi-hat</button>
+      </div>
+    </div>
+
+    <button id="start-btn" class="start-btn" aria-label="Start or stop metronome">Start</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
