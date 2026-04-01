@@ -18,9 +18,6 @@ A simple, mobile-friendly metronome built with plain HTML, CSS, and JavaScript �
 - Dark / light mode toggle
 - Smartphone-optimized responsive UI
 
-## How it was built
-
-This project was built entirely with AI assistance using [Kiro](https://kiro.dev), an AI-powered IDE. The entire app — from concept to deployment — was generated through a conversational workflow with the AI agent.
 
 ### Tech decisions
 
