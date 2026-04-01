@@ -8,10 +8,13 @@ A simple, mobile-friendly metronome built with plain HTML, CSS, and JavaScript �
 
 ## Features
 
-- BPM slider (30–240)
+- BPM slider (30–240) with +/− fine-tune buttons
+- Tempo presets: Largo (60), Andante (90), Allegro (120), Vivace (160), Presto (200)
+- Time signatures: 2/4, 3/4, 4/4, 6/8
+- Accented first beat — louder, higher pitch, bigger flash (like a real metronome)
+- Beat indicator dots synced to the time signature
 - 4 light colors: red, cyan, gold, lime
 - 4 synthesized sounds: click, beep, wood, hi-hat
-- Visual flash synced with audio
 - Smartphone-optimized dark UI
 
 ## How it was built
@@ -21,21 +24,22 @@ This project was built entirely with AI assistance using [Kiro](https://kiro.dev
 ### Tech decisions
 
 - **Plain HTML/CSS/JS** — chosen deliberately over frameworks like React or Vue for maximum simplicity. No bundler, no transpiler, no `node_modules`. Just three files that run directly in the browser.
-- **Web Audio API** — all four sounds (click, beep, wood, hi-hat) are synthesized in real-time using oscillators and noise buffers. No audio files to load or host.
+- **Web Audio API** — all four sounds are synthesized in real-time using oscillators and noise buffers. No audio files to load or host. Each sound has an accented variant (louder, higher pitch) for the downbeat.
   - `click`: short white noise burst with fast decay
-  - `beep`: 880Hz sine wave with exponential gain ramp
-  - `wood`: triangle wave with rapid frequency sweep (800→200Hz)
-  - `hi-hat`: high-pass filtered noise (7kHz cutoff)
+  - `beep`: 880Hz sine wave (1144Hz on accent) with exponential gain ramp
+  - `wood`: triangle wave with rapid frequency sweep (800→200Hz, 1000→200Hz on accent)
+  - `hi-hat`: high-pass filtered noise (7.5kHz cutoff, 6kHz on accent for fuller sound)
 - **CSS custom properties** — light colors are driven by `--c` and `--light-color` variables, making it easy to swap themes without touching JS.
-- **`setInterval` scheduling** — keeps the metronome ticking at the selected BPM. The interval restarts on BPM change for instant response.
-- **Mobile-first design** — `max-width: 400px`, `100dvh` viewport, touch-friendly controls, dark theme to reduce eye strain.
+- **Beat tracking** — a `beatIndex` counter cycles through the time signature. Beat 0 triggers the accent (louder sound, bigger visual pulse, scale 1.12× vs 1.05×).
+- **`setInterval` scheduling** — keeps the metronome ticking at the selected BPM. The interval restarts on BPM or time signature change for instant response.
+- **Mobile-first design** — `max-width: 420px`, `100dvh` viewport, touch-friendly controls, dark theme to reduce eye strain.
 
 ### Project structure
 
 ```
 index.html   → app shell and UI markup
-style.css    → dark theme, responsive layout
-script.js    → audio engine, state management, DOM interaction
+style.css    → dark theme, responsive layout, flash animations
+script.js    → audio engine, beat tracking, state management, DOM interaction
 ```
 
 ### Deployment

@@ -2,7 +2,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #111;
+  background: #0a0a0f;
   color: #eee;
   display: flex;
   justify-content: center;
@@ -12,33 +12,64 @@ body {
 
 .app {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
 }
 
 h1 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  letter-spacing: .05em;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  opacity: .7;
+  opacity: .5;
+}
+
+/* Beat dots */
+.beat-row {
+  display: flex;
+  gap: .6rem;
+  padding: .5rem 0;
+}
+.beat-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #222;
+  border: 2px solid #333;
+  transition: background .06s, border-color .06s, box-shadow .06s;
+}
+.beat-dot.active {
+  background: var(--light-color, #ff4444);
+  border-color: var(--light-color, #ff4444);
+  box-shadow: 0 0 8px 2px var(--light-color, #ff4444);
+}
+.beat-dot.accent {
+  width: 18px;
+  height: 18px;
 }
 
 /* Light */
 .light {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  background: #222;
-  transition: background .05s, box-shadow .05s;
+  background: radial-gradient(circle, #1a1a22 0%, #111118 100%);
+  border: 2px solid #222;
+  transition: background .06s, box-shadow .06s, border-color .06s, transform .06s;
 }
 .light.flash {
-  background: var(--light-color, #ff4444);
-  box-shadow: 0 0 60px 20px var(--light-color, #ff4444);
+  background: radial-gradient(circle, var(--light-color, #ff4444) 0%, transparent 70%);
+  box-shadow: 0 0 80px 30px var(--light-color, #ff4444), inset 0 0 30px var(--light-color, #ff4444);
+  border-color: var(--light-color, #ff4444);
+  transform: scale(1.05);
+}
+.light.flash.accent-flash {
+  transform: scale(1.12);
+  box-shadow: 0 0 100px 40px var(--light-color, #ff4444), inset 0 0 40px var(--light-color, #ff4444);
 }
 
 /* BPM */
@@ -46,11 +77,31 @@ h1 {
   font-size: 2.4rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
 }
+.bpm-nudge {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  background: #1a1a1a;
+  color: #eee;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .15s;
+  line-height: 1;
+}
+.bpm-nudge:active { border-color: #eee; }
 
 input[type="range"] {
   width: 100%;
-  accent-color: #888;
+  accent-color: #555;
+  height: 6px;
 }
 
 /* Option groups */
@@ -58,44 +109,47 @@ input[type="range"] {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: .4rem;
 }
 .option-group label {
-  font-size: .75rem;
+  font-size: .7rem;
   text-transform: uppercase;
-  letter-spacing: .1em;
-  opacity: .5;
+  letter-spacing: .12em;
+  opacity: .4;
 }
 .options {
   display: flex;
-  gap: .5rem;
+  gap: .4rem;
 }
 
 /* Option buttons */
 .opt {
   flex: 1;
-  padding: .6rem;
-  border: 2px solid #333;
+  padding: .55rem .3rem;
+  border: 2px solid #222;
   border-radius: .5rem;
-  background: #1a1a1a;
-  color: #aaa;
-  font-size: .85rem;
+  background: #141418;
+  color: #666;
+  font-size: .8rem;
   cursor: pointer;
-  transition: border-color .15s, color .15s;
+  transition: border-color .15s, color .15s, background .15s;
+  text-align: center;
 }
 .opt.selected {
   border-color: #eee;
   color: #eee;
+  background: #1e1e28;
 }
 
 /* Light color swatches */
 .opt[data-light] {
   background: var(--c);
-  opacity: .4;
+  opacity: .3;
 }
 .opt[data-light].selected {
   opacity: 1;
   border-color: #fff;
+  box-shadow: 0 0 10px var(--c);
 }
 
 /* Start button */
@@ -104,15 +158,17 @@ input[type="range"] {
   padding: 1rem;
   border: none;
   border-radius: .75rem;
-  background: #eee;
+  background: linear-gradient(135deg, #eee, #ccc);
   color: #111;
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
   letter-spacing: .05em;
   text-transform: uppercase;
+  transition: background .2s, transform .1s;
 }
+.start-btn:active { transform: scale(.98); }
 .start-btn.active {
-  background: #ff4444;
+  background: linear-gradient(135deg, #ff4444, #cc2222);
   color: #fff;
 }
