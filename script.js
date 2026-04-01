@@ -7,39 +7,33 @@
     const pitchMul = accent ? 1.3 : 1;
 
     switch (type) {
-      case 'pulse': {
-        // Loud layered hit: square burst + sine thump + noise crack
-        const osc1 = ctx.createOscillator();
-        const g1 = ctx.createGain();
-        osc1.type = 'square';
-        osc1.frequency.value = 1000 * pitchMul;
-        g1.gain.setValueAtTime(vol * 1.5, ctx.currentTime);
-        g1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.04);
-        osc1.connect(g1).connect(ctx.destination);
-        osc1.start();
-        osc1.stop(ctx.currentTime + 0.04);
-        // Low sine thump
+      case 'tick': {
+        // Mechanical metronome tick — sharp resonant click like pendulum hitting stop
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'triangle';
+        const freq = accent ? 1800 : 1500;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.008);
+        g.gain.setValueAtTime(vol * 0.9, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.025);
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = 1200;
+        bp.Q.value = 5;
+        osc.connect(bp).connect(g).connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.03);
+        // Tiny body resonance
         const osc2 = ctx.createOscillator();
         const g2 = ctx.createGain();
         osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(300 * pitchMul, ctx.currentTime);
-        osc2.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.05);
-        g2.gain.setValueAtTime(vol * 1.2, ctx.currentTime);
-        g2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.06);
+        osc2.frequency.value = accent ? 600 : 500;
+        g2.gain.setValueAtTime(vol * 0.15, ctx.currentTime);
+        g2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.04);
         osc2.connect(g2).connect(ctx.destination);
         osc2.start();
-        osc2.stop(ctx.currentTime + 0.06);
-        // Noise crack
-        const buf = ctx.createBuffer(1, ctx.sampleRate * 0.01, ctx.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
-        const src = ctx.createBufferSource();
-        src.buffer = buf;
-        const g3 = ctx.createGain();
-        g3.gain.setValueAtTime(vol * 1.6, ctx.currentTime);
-        g3.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.012);
-        src.connect(g3).connect(ctx.destination);
-        src.start();
+        osc2.stop(ctx.currentTime + 0.04);
         break;
       }
       case 'click': {
@@ -128,7 +122,7 @@
   let bpm = 120;
   let running = false;
   let timerId = null;
-  let currentSound = 'pulse';
+  let currentSound = 'beep';
   let currentLight = '#ff4444';
   let timeSignature = 4;
   let beatIndex = 0;

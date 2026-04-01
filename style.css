@@ -132,14 +132,14 @@ h1 {
   transition: background .06s, box-shadow .06s, border-color .06s, transform .06s;
 }
 .light.flash {
-  background: radial-gradient(circle, var(--light-color, #ff4444) 0%, transparent 70%);
-  box-shadow: 0 0 80px 30px var(--light-color, #ff4444), inset 0 0 30px var(--light-color, #ff4444);
+  background: var(--light-color, #ff4444);
+  box-shadow: 0 0 80px 30px var(--light-color, #ff4444);
   border-color: var(--light-color, #ff4444);
   transform: scale(1.05);
 }
 .light.flash.accent-flash {
   transform: scale(1.12);
-  box-shadow: 0 0 100px 40px var(--light-color, #ff4444), inset 0 0 40px var(--light-color, #ff4444);
+  box-shadow: 0 0 100px 40px var(--light-color, #ff4444);
 }
 
 /* ===== BPM ===== */
