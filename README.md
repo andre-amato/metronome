@@ -17,10 +17,6 @@ A simple, mobile-friendly metronome built with plain HTML, CSS, and JavaScript �
 - 5 synthesized sounds: beep, tick, click, snap, knock
 - Smartphone-optimized UI
 
-## How it was built
-
-This project was built entirely with AI assistance using [Kiro](https://kiro.dev), an AI-powered IDE. The entire app — from concept to deployment — was generated through a conversational workflow with the AI agent.
-
 ### Tech decisions
 
 - **Plain HTML/CSS/JS** — chosen deliberately over frameworks like React or Vue for maximum simplicity. No bundler, no transpiler, no `node_modules`. Just three files that run directly in the browser.
