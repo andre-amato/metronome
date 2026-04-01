@@ -32,34 +32,57 @@
         osc.stop(ctx.currentTime + 0.1);
         break;
       }
-      case 'wood': {
-        const osc = ctx.createOscillator();
+      case 'snap': {
+        // Sharp, punchy snap — layered noise + high sine pop
+        const buf = ctx.createBuffer(1, ctx.sampleRate * 0.015, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2);
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = accent ? 3500 : 3000;
+        bp.Q.value = 2;
         const g = ctx.createGain();
-        osc.type = 'triangle';
-        const baseFreq = accent ? 1000 : 800;
-        osc.frequency.setValueAtTime(baseFreq, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.04);
-        g.gain.setValueAtTime(vol * 0.7, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.06);
-        osc.connect(g).connect(ctx.destination);
+        g.gain.setValueAtTime(vol * 1.2, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.02);
+        src.connect(bp).connect(g).connect(ctx.destination);
+        src.start();
+        // Add a sine pop on top
+        const osc = ctx.createOscillator();
+        const g2 = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 1200 * pitchMul;
+        g2.gain.setValueAtTime(vol * 0.6, ctx.currentTime);
+        g2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.015);
+        osc.connect(g2).connect(ctx.destination);
         osc.start();
-        osc.stop(ctx.currentTime + 0.06);
+        osc.stop(ctx.currentTime + 0.02);
         break;
       }
-      case 'hi-hat': {
-        const dur = accent ? 0.07 : 0.04;
-        const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      case 'knock': {
+        // Deep, loud knock — low frequency thump
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        const baseFreq = accent ? 220 : 180;
+        osc.frequency.setValueAtTime(baseFreq, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + 0.06);
+        g.gain.setValueAtTime(vol * 1.4, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        osc.connect(g).connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.1);
+        // Add attack transient
+        const buf = ctx.createBuffer(1, ctx.sampleRate * 0.008, ctx.sampleRate);
         const d = buf.getChannelData(0);
         for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
         const src = ctx.createBufferSource();
         src.buffer = buf;
-        const hp = ctx.createBiquadFilter();
-        hp.type = 'highpass';
-        hp.frequency.value = accent ? 6000 : 7500;
-        const g = ctx.createGain();
-        g.gain.setValueAtTime(vol * 0.7, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + dur);
-        src.connect(hp).connect(g).connect(ctx.destination);
+        const g2 = ctx.createGain();
+        g2.gain.setValueAtTime(vol * 0.8, ctx.currentTime);
+        g2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.01);
+        src.connect(g2).connect(ctx.destination);
         src.start();
         break;
       }
